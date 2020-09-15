@@ -1,20 +1,20 @@
-<h3>Add Story</h3>
+<h3>Edit Story</h3>
 <div class="row">
-  <form action="/main/" method="POST" class="col s12">
+  <form action="/main/editBook/" method="POST" class="col s12">
     <div class="row">
       <div class="input-field">
         <label for="title">Book Name</label>
-        <input type="text" id="title" name="title" />
+        <input type="text" id="title" name="title" value="<%= title %>" />
       </div>
     </div>
     <div class="row">
       <div class="input-field">
         <label for="title">Author</label>
-        <input type="text" id="author" name="author" />
+        <input type="text" id="author" name="author" value="<%= author %>" />
       </div>
     </div>
     <div class="row">
-      <input type="submit" value="Save" class="btn" />
+      <input type="submit" value="Update" class="btn" />
       <a href="/main" class="btn orange">Cancel</a>
     </div>
   </form>
