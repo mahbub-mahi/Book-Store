@@ -4,8 +4,8 @@
 
 <div class="header">
   <h1>Welcome <span><%= name %></span></h1>
-  <p>Here Are Your BookList</p>
-  <p>If You Want To Add A New Book , Then Click The "Add New" button</p>
+  <p>Here Is Your BookList</p>
+  <p>If You Want To Add A New Book , Click The "Add New" Button</p>
 </div>
 <table class="table table-dark">
   <thead>
@@ -19,7 +19,7 @@
   </thead>
 
   <% if (books) { %>
-  <p>HERE ARE YOUR BOOKS</p>
+  <p>Your Books Are Listed Below</p>
   <%} else { %>
   <p>NO BOOKS</p>
   <% } %> <% books.forEach(function(book){ %>
