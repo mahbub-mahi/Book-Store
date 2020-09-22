@@ -4,19 +4,21 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const Book = require("../models/Book");
 const passport = require("passport");
-
 const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
 
+//GET HOME PAGE
 router.get("/", forwardAuthenticated, (req, res) => {
   res.render("home");
 });
+//GET LOGIN PAGE
 router.get("/login", forwardAuthenticated, (req, res) => {
   res.render("login");
 });
+//GET REGISTER PAGE
 router.get("/registration", forwardAuthenticated, (req, res) => {
   res.render("registration");
 });
-
+//GET MAIN PAGE
 router.get("/main", ensureAuthenticated, async (req, res) => {
   try {
     const books = await Book.find({ user: req.user.id }).lean();
@@ -28,6 +30,8 @@ router.get("/main", ensureAuthenticated, async (req, res) => {
     console.log(err);
   }
 });
+
+//POST IN REGISTER PAGE
 router.post("/registration", (req, res) => {
   const { name, email, password, password2 } = req.body;
   let errors = [];
@@ -102,8 +106,8 @@ router.get("/logout", (req, res) => {
   req.logout();
   res.redirect("login");
 });
-module.exports = router;
 
+//ADD BOOKS
 router.get("/addBook", ensureAuthenticated, (req, res) => {
   res.render("book/addBook");
 });
@@ -116,25 +120,40 @@ router.post("/main", ensureAuthenticated, async (req, res) => {
     console.log(err);
   }
 });
+
+//GET INDIVIDUAL BOOKS
 router.get("/editBook/:id", ensureAuthenticated, (req, res) => {
   const id = req.params.id;
   Book.findById(id).then((result) => {
     res.render("book/editBook", {
+      id: result._id,
       blog: result,
       title: result.title,
       author: result.author,
     });
   });
 });
-router.post("/main/editBook", ensureAuthenticated, async (req, res) => {
-  try {
-    console.log(req.body);
-    console.log(req.user.id);
 
-    req.body.user = req.user.id;
-    await Book.update(req.body);
+//UPDATE BOOK
+router.post("/editBook/:id", ensureAuthenticated, (req, res) => {
+  const id = req.params.id;
+  const update = {
+    title: req.body.title,
+    author: req.body.author,
+  };
+
+  Book.findByIdAndUpdate(id, update, { new: true }, () => {
     res.redirect("/main");
-  } catch (err) {
-    console.log(err);
-  }
+  });
 });
+
+//DELETE BOOK
+router.get("/delete/:id", function (req, res) {
+  Book.findByIdAndDelete(req.params.id, function (err, user) {
+    if (err)
+      return res.status(500).send("There was a problem deleting the user.");
+    res.redirect("/main");
+  });
+});
+
+module.exports = router;
